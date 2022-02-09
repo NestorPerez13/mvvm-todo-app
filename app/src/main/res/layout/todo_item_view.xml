@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="todo"
+            type="com.nestor.data.model.Todo" />
+
+        <variable
+            name="checkedChanged"
+            type="com.nestor.ui.todolist.adapter.OnCheckedChanged" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <CheckBox
+            android:id="@+id/checkbox"
+            strikeTextIfMarked="@{todo}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:checked="@{todo.marked}"
+            android:onCheckedChanged="@{(compoundButton, checked) -> checkedChanged.onCheckedChanged(checked, todo)}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="My task" />
+
+        <TextView
+            date="@{todo.createdAt}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            app:layout_constraintEnd_toEndOf="@id/checkbox"
+            app:layout_constraintStart_toStartOf="@id/checkbox"
+            app:layout_constraintTop_toBottomOf="@id/checkbox"
+            tools:text="2021-02-08 18:17" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

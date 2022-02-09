@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_graph"
+    app:startDestination="@id/todoListFragment">
+    <fragment
+        android:id="@+id/todoListFragment"
+        android:name="com.nestor.ui.todolist.view.TodoListFragment"
+        android:label="TODOs"
+        tools:layout="@layout/fragment_todo_list">
+        <action
+            android:id="@+id/action_todoListFragment_to_todoDetailFragment2"
+            app:destination="@id/todoDetailFragment" />
+        <action
+            android:id="@+id/action_todoListFragment_to_todoAddFragment"
+            app:destination="@id/todoAddFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/todoDetailFragment"
+        android:name="com.nestor.ui.tododetail.view.TodoDetailFragment"
+        android:label="Editar Todo"
+        tools:layout="@layout/fragment_todo_detail" />
+    <fragment
+        android:id="@+id/todoAddFragment"
+        android:name="com.nestor.ui.todoadd.view.TodoAddFragment"
+        android:label="Añadir Todo"
+        tools:layout="@layout/fragment_todo_add" />
+
+</navigation>
