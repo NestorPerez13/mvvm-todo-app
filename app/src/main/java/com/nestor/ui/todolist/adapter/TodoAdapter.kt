@@ -3,7 +3,6 @@ package com.nestor.ui.todolist.adapter
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.databinding.ObservableList
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.nestor.data.model.Todo
@@ -13,16 +12,9 @@ import com.nestor.util.TodoDiffUtil
 private const val TAG = "TodoAdapter"
 
 class TodoAdapter(var items: List<Todo>) : RecyclerView.Adapter<TodoAdapter.ViewHolder>(),
-    OnCheckedChanged {
+    OnCheckedChanged, OnDeleteTodo {
     var checkedChanged: OnCheckedChanged? = null
-
-    init {
-        Log.i(TAG, ": init")
-    }
-
-    /*fun setOnCheckedChangedListener(checkedChanged: OnCheckedChanged) {
-        this.checkedChanged = checkedChanged
-    }*/
+    var deleteListener: OnDeleteTodo? = null
 
     inner class ViewHolder(val binding: TodoItemViewBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -39,6 +31,7 @@ class TodoAdapter(var items: List<Todo>) : RecyclerView.Adapter<TodoAdapter.View
         holder.binding.apply {
             todo = items[position]
             checkedChanged = this@TodoAdapter
+            deleteListener = this@TodoAdapter
         }
     }
 
@@ -47,11 +40,14 @@ class TodoAdapter(var items: List<Todo>) : RecyclerView.Adapter<TodoAdapter.View
     fun updateItemsList(newItems: List<Todo>) {
         val diff = TodoDiffUtil(oldList = items, newList = newItems)
         items = newItems
-        Log.i(TAG, "updateItemsList: ")
         DiffUtil.calculateDiff(diff).dispatchUpdatesTo(this)
     }
 
     override fun onCheckedChanged(checked: Boolean, item: Todo) {
         checkedChanged?.onCheckedChanged(checked, item)
+    }
+
+    override fun onDeleteClick(todo: Todo) {
+        deleteListener?.onDeleteClick(todo)
     }
 }

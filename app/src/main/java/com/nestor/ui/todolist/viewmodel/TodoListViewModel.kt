@@ -26,14 +26,25 @@ class TodoListViewModel @Inject constructor(private val todoRepository: TodoRepo
             started = SharingStarted.Lazily,
             initialValue = emptyList()
         )
-
-    init {
-        Log.i(TAG, "init: ")
-    }
+    private val _onItemDeleted = MutableStateFlow<Todo?>(null)
+    val onItemDeleted: StateFlow<Todo?> = _onItemDeleted
 
     fun onFavoriteToggle(checked: Boolean, item: Todo) {
         viewModelScope.launch(Dispatchers.IO) {
             todoRepository.updateTodo(item.copy(isMarked = checked))
+        }
+    }
+
+    fun onDeleteItem(item: Todo) {
+        viewModelScope.launch(Dispatchers.IO) {
+            todoRepository.deleteTodo(item)
+            _onItemDeleted.emit(item)
+        }
+    }
+
+    fun onUndoDelete(item: Todo) {
+        viewModelScope.launch(Dispatchers.IO) {
+            todoRepository.insertTodo(item.copy(id = 0))
         }
     }
 }

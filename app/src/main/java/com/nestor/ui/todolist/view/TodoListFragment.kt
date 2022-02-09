@@ -13,21 +13,26 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import com.nestor.data.model.Todo
 import com.nestor.todotasks.R
 import com.nestor.todotasks.databinding.FragmentTodoListBinding
 import com.nestor.ui.todolist.adapter.OnAddTodo
 import com.nestor.ui.todolist.adapter.OnCheckedChanged
+import com.nestor.ui.todolist.adapter.OnDeleteTodo
 import com.nestor.ui.todolist.adapter.TodoAdapter
 import com.nestor.ui.todolist.viewmodel.TodoListViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 private const val TAG = "TodoListFragment"
 
 @AndroidEntryPoint
-class TodoListFragment : Fragment(), OnAddTodo, OnCheckedChanged {
+class TodoListFragment : Fragment(), OnAddTodo, OnDeleteTodo, OnCheckedChanged {
     private val todoListViewModel: TodoListViewModel by viewModels()
     private lateinit var mLayoutManager: LinearLayoutManager
     private lateinit var mBinding: FragmentTodoListBinding
@@ -46,6 +51,7 @@ class TodoListFragment : Fragment(), OnAddTodo, OnCheckedChanged {
         mAdapter =
             TodoAdapter(todoListViewModel.mTodos.value).apply {
                 checkedChanged = this@TodoListFragment
+                deleteListener = this@TodoListFragment
             }
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_todo_list, container, false)
         mBinding.lifecycleOwner = viewLifecycleOwner
@@ -67,6 +73,18 @@ class TodoListFragment : Fragment(), OnAddTodo, OnCheckedChanged {
                 }
             }
         }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                todoListViewModel.onItemDeleted.collect {
+                    it?.let { todo ->
+                        val snack =
+                            Snackbar.make(mBinding.root, "Item deleted", Snackbar.LENGTH_SHORT)
+                        snack.setAction("Undo") { todoListViewModel.onUndoDelete(todo) }
+                        snack.show()
+                    }
+                }
+            }
+        }
     }
 
     override fun onAddTodoClick() {
@@ -75,5 +93,9 @@ class TodoListFragment : Fragment(), OnAddTodo, OnCheckedChanged {
 
     override fun onCheckedChanged(checked: Boolean, item: Todo) {
         todoListViewModel.onFavoriteToggle(checked, item)
+    }
+
+    override fun onDeleteClick(todo: Todo) {
+        todoListViewModel.onDeleteItem(todo)
     }
 }

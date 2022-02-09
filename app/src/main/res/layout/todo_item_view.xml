@@ -12,6 +12,10 @@
         <variable
             name="checkedChanged"
             type="com.nestor.ui.todolist.adapter.OnCheckedChanged" />
+
+        <variable
+            name="deleteListener"
+            type="com.nestor.ui.todolist.adapter.OnDeleteTodo" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -22,10 +26,10 @@
             android:id="@+id/checkbox"
             strikeTextIfMarked="@{todo}"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="64dp"
             android:checked="@{todo.marked}"
             android:onCheckedChanged="@{(compoundButton, checked) -> checkedChanged.onCheckedChanged(checked, todo)}"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/deleteImgBtn"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="My task" />
@@ -39,5 +43,17 @@
             app:layout_constraintStart_toStartOf="@id/checkbox"
             app:layout_constraintTop_toBottomOf="@id/checkbox"
             tools:text="2021-02-08 18:17" />
+
+        <ImageView
+            android:id="@+id/deleteImgBtn"
+            if="@{todo.marked}"
+            android:layout_width="48dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="12dp"
+            android:onClick="@{() -> deleteListener.onDeleteClick(todo)}"
+            android:src="@drawable/ic_baseline_delete_24"
+            app:layout_constraintBottom_toBottomOf="@id/checkbox"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/checkbox" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
