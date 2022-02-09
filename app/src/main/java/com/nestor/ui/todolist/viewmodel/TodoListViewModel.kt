@@ -47,4 +47,8 @@ class TodoListViewModel @Inject constructor(private val todoRepository: TodoRepo
             todoRepository.insertTodo(item.copy(id = 0))
         }
     }
+
+    fun onSnackBarConsumed() {
+        _onItemDeleted.tryEmit(null)
+    }
 }

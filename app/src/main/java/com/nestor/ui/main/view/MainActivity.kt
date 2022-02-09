@@ -7,11 +7,13 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.nestor.todotasks.R
+import com.nestor.todotasks.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 import java.lang.IllegalStateException
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+    lateinit var mBinding: ActivityMainBinding
     private val navController: NavController by lazy {
         val host =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment_container)
@@ -21,7 +23,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        mBinding = ActivityMainBinding.inflate(layoutInflater, null, false)
+        setContentView(mBinding.root)
+        setSupportActionBar(mBinding.materialToolbar)
         setupActionBarWithNavController(navController)
     }
 

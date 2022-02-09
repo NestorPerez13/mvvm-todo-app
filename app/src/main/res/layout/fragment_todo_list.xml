@@ -21,16 +21,15 @@
             type="androidx.recyclerview.widget.RecyclerView.LayoutManager" />
     </data>
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             layoutManager="@{layoutManager}"
             setAdapter="@{adapter}"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -41,11 +40,13 @@
             if="@{viewModel.mTodos.size() == 0}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="top|center"
             android:layout_marginTop="32dp"
             android:text="To add a Todo, click on the + icon"
             android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:layout_width="wrap_content"
@@ -55,9 +56,9 @@
             android:onClick="@{() -> onAddTodo.onAddTodoClick()}"
             android:src="@drawable/ic_baseline_add_24"
             android:tint="?attr/colorOnSecondary"
-            app:layout_anchor="@id/recyclerView"
-            app:layout_anchorGravity="bottom|end" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

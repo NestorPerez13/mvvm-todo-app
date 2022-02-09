@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import com.nestor.data.model.Todo
 import com.nestor.todotasks.R
@@ -77,10 +78,17 @@ class TodoListFragment : Fragment(), OnAddTodo, OnDeleteTodo, OnCheckedChanged {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 todoListViewModel.onItemDeleted.collect {
                     it?.let { todo ->
-                        val snack =
-                            Snackbar.make(mBinding.root, "Item deleted", Snackbar.LENGTH_SHORT)
+                        val snack = Snackbar
+                            .make(mBinding.root, "Item deleted", Snackbar.LENGTH_SHORT)
                         snack.setAction("Undo") { todoListViewModel.onUndoDelete(todo) }
                         snack.show()
+                        snack.addCallback(object :
+                            BaseTransientBottomBar.BaseCallback<Snackbar>() {
+                            override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                                super.onDismissed(transientBottomBar, event)
+                                todoListViewModel.onSnackBarConsumed()
+                            }
+                        })
                     }
                 }
             }
